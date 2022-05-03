@@ -48,7 +48,7 @@ async def test_access_invalid_token(client, student_token):
     _, token = student_token
 
     invalid_token = (
-        token['access_token'][:-1] + 'a' if token['access_token'][-1] != 'a' else 'b'
+        token['access_token'][:-1]
     )
     response = client.get(
         '/api/profile/courses', headers={'Authorization': f'Bearer {invalid_token}'}
