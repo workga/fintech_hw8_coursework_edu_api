@@ -8,7 +8,7 @@ class SolutionBase(BaseModel):
     module_number: int
 
     @validator('module_number')
-    def check_duration(cls: Any, number: int):
+    def check_duration(cls: Any, number: int) -> int:
         if number <= 0:
             raise ValueError('Number is incorrect')
         return number
@@ -26,7 +26,7 @@ class SolutionReviewPut(BaseModel):
     score: int
 
     @validator('score')
-    def check_duration(cls: Any, score: int):
+    def check_duration(cls: Any, score: int) -> int:
         if score <= 0 or score > 10:
             raise ValueError('Score is incorrect')
         return score

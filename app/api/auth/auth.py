@@ -1,11 +1,11 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Body
+from fastapi import APIRouter, Body, Depends, HTTPException, status
 from fastapi_jwt_auth import AuthJWT
 
-from app.crud.crud_user import crud_user
 from app.api.deps import check_credentials
+from app.crud.crud_user import crud_user
 from app.models.user import User
-from app.schemas.user import UserCreate, UserInfo, UserRead
-from app.schemas.token import Token, AccessToken
+from app.schemas.token import AccessToken, Token
+from app.schemas.user import UserCreate, UserInfo
 
 router = APIRouter()
 
@@ -28,9 +28,9 @@ async def register_user(
     if user is None:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail='Email is already registered'
+            detail='Email is already registered',
         )
-    
+
     return user
 
 
@@ -44,8 +44,8 @@ async def get_token(
 ) -> Token:
 
     return Token(
-        access_token = authorize.create_access_token(subject=user.id, fresh=True),
-        refresh_token = authorize.create_refresh_token(subject=user.id),
+        access_token=authorize.create_access_token(subject=user.id, fresh=True),
+        refresh_token=authorize.create_refresh_token(subject=user.id),
     )
 
 
@@ -61,5 +61,5 @@ async def refresh_token(
     user_id = authorize.get_jwt_subject()
 
     return AccessToken(
-        access_token = authorize.create_access_token(subject=user_id, fresh=True)
+        access_token=authorize.create_access_token(subject=user_id, fresh=True)
     )

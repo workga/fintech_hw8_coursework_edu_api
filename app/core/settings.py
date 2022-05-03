@@ -1,4 +1,3 @@
-
 from pydantic import BaseSettings
 
 
@@ -9,7 +8,7 @@ class AppSettings(BaseSettings):
     db_url: str
     db_url_testing: str
 
-    authjwt_secret_key: str = "secret"
+    authjwt_secret_key: str = 'secret'
     authjwt_access_token_expires: int = 60 * 60 * 24 * 7
     authjwt_refresh_token_expires: int = 60 * 60 * 24 * 30
 

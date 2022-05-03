@@ -1,10 +1,7 @@
-from datetime import timedelta
-from typing import List, Any
-from datetime import timedelta, date
+from datetime import date
+from typing import Any
 
 from pydantic import BaseModel, constr, validator
-
-from app.schemas.module import ModuleRead
 
 
 class CourseBase(BaseModel):
@@ -13,7 +10,7 @@ class CourseBase(BaseModel):
     duration: int
 
     @validator('duration')
-    def check_duration(cls: Any, duration: int):
+    def check_duration(cls: Any, duration: int) -> int:
         if duration <= 0:
             raise ValueError('Duration is incorrect')
         return duration

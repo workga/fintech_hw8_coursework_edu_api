@@ -1,15 +1,13 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, status, Body
+from fastapi import APIRouter, Body, Depends, status
 
-
+from app.api.courses import modules
+from app.api.deps import Auth, course_exists
 from app.crud.crud_course import crud_course
 from app.crud.crud_course_user import crud_course_teacher
 from app.models.course import Course
-from app.api.deps import Auth, course_exists
-from app.api.courses import modules
-from app.schemas.course import CourseCreate, CourseRead, CourseInfo
-
+from app.schemas.course import CourseCreate, CourseInfo, CourseRead
 
 router = APIRouter()
 
@@ -46,8 +44,6 @@ async def create_course(
     '/{course_id}',
     response_model=CourseInfo,
 )
-async def get_course_info(
-    course: Course = Depends(course_exists)
-) -> Course:
+async def get_course_info(course: Course = Depends(course_exists)) -> Course:
 
     return course

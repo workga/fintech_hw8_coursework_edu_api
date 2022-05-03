@@ -1,10 +1,10 @@
 from sqlalchemy import (
+    CheckConstraint,
     Column,
     ForeignKey,
     Integer,
-    Text,
     String,
-    CheckConstraint,
+    Text,
     UniqueConstraint,
 )
 from sqlalchemy.orm import relationship
@@ -23,7 +23,7 @@ class Solution(Base):
     text = Column(Text, nullable=False)
     score = Column(Integer, default=None)
     review = Column(Text, default=None)
-    status = Column(String(20), nullable=False, default="waiting")
+    status = Column(String(20), nullable=False, default='waiting')
 
     __table_args__ = (
         CheckConstraint('status in ("waiting", "sent", "reviewed")'),
@@ -32,6 +32,9 @@ class Solution(Base):
     )
 
     messages = relationship('Message')
-    student = relationship('User', foreign_keys=[student_id], back_populates='sent_solutions')
-    teacher = relationship('User', foreign_keys=[teacher_id], back_populates='received_solutions')
-
+    student = relationship(
+        'User', foreign_keys=[student_id], back_populates='sent_solutions'
+    )
+    teacher = relationship(
+        'User', foreign_keys=[teacher_id], back_populates='received_solutions'
+    )

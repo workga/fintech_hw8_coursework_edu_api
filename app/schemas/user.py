@@ -1,4 +1,5 @@
 from typing import Any, Optional
+
 from pydantic import BaseModel, EmailStr, constr, validator
 
 
@@ -16,11 +17,11 @@ class UserCreate(UserBase):
     role: str = 'student'
 
     @validator('role')
-    def check_role(cls: Any, role: Optional[str]):
+    def check_role(cls: Any, role: Optional[str]) -> str:
         if role not in ('student', 'teacher', 'admin'):
             raise ValueError('Role is incorrect')
         return role
-    
+
 
 class UserRead(UserBase):
     id: int
@@ -34,6 +35,3 @@ class UserInfo(UserRead):
 class UserLogin(BaseModel):
     email: EmailStr
     password: constr(min_length=1, max_length=50)  # type: ignore
-
-
-

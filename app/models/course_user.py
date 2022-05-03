@@ -9,9 +9,7 @@ class CourseStudent(Base):
     course_id = Column(Integer, ForeignKey('course.id'), nullable=False)
     student_id = Column(Integer, ForeignKey('user.id'), nullable=False)
 
-    __table_args__ = (
-        PrimaryKeyConstraint('course_id', 'student_id'),
-    )
+    __table_args__ = (PrimaryKeyConstraint('course_id', 'student_id'),)
 
 
 class CourseTeacher(Base):
@@ -20,6 +18,4 @@ class CourseTeacher(Base):
     course_id = Column(Integer, ForeignKey('course.id'), nullable=False)
     teacher_id = Column(Integer, ForeignKey('user.id'), nullable=False)
 
-    __table_args__ = (
-        PrimaryKeyConstraint('course_id', 'teacher_id'),
-    )
+    __table_args__ = (PrimaryKeyConstraint('course_id', 'teacher_id'),)

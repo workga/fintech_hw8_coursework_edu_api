@@ -1,11 +1,9 @@
-from tests.app.api.conftest import add_student_model, add_teacher_model, get_student_create_schema
-
 async def test_access_success(client, student_token):
     _, token = student_token
-    
+
     response = client.get(
         '/api/profile/courses',
-        headers={"Authorization": f"Bearer {token['access_token']}"}
+        headers={'Authorization': f"Bearer {token['access_token']}"},
     )
 
     assert response.status_code == 200
@@ -16,13 +14,11 @@ async def test_refresh_success(client, student_token):
 
     access_token = client.post(
         '/api/auth/login/refresh',
-        headers={"Authorization": f"Bearer {token['refresh_token']}"}
-    ).json()["access_token"]
-
+        headers={'Authorization': f"Bearer {token['refresh_token']}"},
+    ).json()['access_token']
 
     response = client.get(
-        '/api/profile/courses',
-        headers={"Authorization": f"Bearer {access_token}"}
+        '/api/profile/courses', headers={'Authorization': f'Bearer {access_token}'}
     )
 
     assert response.status_code == 200
@@ -41,25 +37,21 @@ async def test_access_wrong_role(client, student_token):
 
     response = client.put(
         '/api/profile/solutions/1',
-        json={
-            "review": "review",
-            "score": 10
-        },
-        headers={"Authorization": f"Bearer {token['access_token']}"}
+        json={'review': 'review', 'score': 10},
+        headers={'Authorization': f"Bearer {token['access_token']}"},
     )
 
     assert response.status_code == 403
 
+
 async def test_access_invalid_token(client, student_token):
     _, token = student_token
-    
+
     invalid_token = (
-        token['access_token'][:-1] + 
-        'a' if token['access_token'][-1] != 'a' else 'b'
+        token['access_token'][:-1] + 'a' if token['access_token'][-1] != 'a' else 'b'
     )
     response = client.get(
-        '/api/profile/courses',
-        headers={"Authorization": f"Bearer {invalid_token}"}
+        '/api/profile/courses', headers={'Authorization': f'Bearer {invalid_token}'}
     )
     print(response.json())
     assert response.status_code == 422

@@ -1,16 +1,14 @@
-from typing import List, Optional, Any
+from typing import List, Optional
 
-from fastapi import HTTPException, status, Depends, Path
+from fastapi import Depends, HTTPException, Path, status
 from fastapi_jwt_auth import AuthJWT
 from fastapi_jwt_auth.exceptions import MissingTokenError
 
 from app.core.security import verify_password
-from app.crud.crud_user import crud_user
 from app.crud.crud_course import crud_course
-from app.crud.crud_solution import crud_solution
-from app.models.solution import Solution
-from app.models.user import User
+from app.crud.crud_user import crud_user
 from app.models.course import Course
+from app.models.user import User
 from app.schemas.user import UserLogin
 
 
@@ -27,7 +25,7 @@ async def check_credentials(user_login: UserLogin) -> User:
     return user
 
 
-class Auth():
+class Auth:
     def __init__(self, authorize: AuthJWT = Depends()):
         try:
             authorize.fresh_jwt_required()
@@ -36,20 +34,18 @@ class Auth():
         else:
             self.user_id = authorize.get_jwt_subject()
 
-    
-    async def check_roles(self, roles: List[str] = []) -> Optional[User]:
+    async def check_roles(self, roles: Optional[List[str]] = None) -> Optional[User]:
         """
         If 'roles' is empty list, endpoint is available for all users,
         otherwise it is available only for listed roles.
         Endpoint can behave differently depending on the user role.
         Invalid token is denied.
         """
-        
+
         if self.user_id is None:
             if roles:
                 raise HTTPException(status.HTTP_403_FORBIDDEN)
-            return  None
-        
+            return None
 
         user = await crud_user.get_by_id(self.user_id)
         if (user is None) or (roles and user.role not in roles):
@@ -66,5 +62,5 @@ async def course_exists(
 
     if course is None:
         raise HTTPException(status.HTTP_404_NOT_FOUND)
-    
+
     return course

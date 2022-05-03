@@ -1,8 +1,8 @@
-import click
 import asyncio
 
-from app.database.utils import recreate_db, create_admin
+import click
 
+from app.database.utils import create_admin, recreate_db
 
 loop = asyncio.get_event_loop()
 
@@ -17,13 +17,12 @@ def cli_recreate_db(testing: bool) -> None:
 @click.option('--testing', is_flag=True)
 @click.argument('email')
 @click.argument('password')
-def cli_create_admin(email: str, password: str,  testing: bool) -> None:
+def cli_create_admin(email: str, password: str, testing: bool) -> None:
     loop.run_until_complete(create_admin(email, password, testing))
 
 
-
 @click.group()
-def cli_handler():
+def cli_handler() -> None:
     pass
 
 

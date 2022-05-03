@@ -1,9 +1,9 @@
 from sqlalchemy import (
-    PrimaryKeyConstraint,
     Column,
     DateTime,
     ForeignKey,
     Integer,
+    PrimaryKeyConstraint,
     Text,
     func,
 )
@@ -19,7 +19,5 @@ class Message(Base):
     text = Column(Text, nullable=False)
     sent = Column(DateTime, server_default=func.now())
 
-    __table_args__ = (
-        PrimaryKeyConstraint('user_id', 'solution_id'),
-    )
-    __mapper_args__ = {"eager_defaults": True}
+    __table_args__ = (PrimaryKeyConstraint('user_id', 'solution_id'),)
+    __mapper_args__ = {'eager_defaults': True}

@@ -1,13 +1,12 @@
-from typing import List, Union
+from typing import List
 
-from fastapi import APIRouter, Depends, status, Body, Path, HTTPException
+from fastapi import APIRouter, Body, Depends, HTTPException, Path, status
 
+from app.api.deps import Auth, course_exists
 from app.crud.crud_module import crud_module
 from app.models.course import Course
 from app.models.module import Module
-from app.api.deps import Auth, course_exists
 from app.schemas.module import ModuleCreate, ModuleInfo, ModuleRead
-
 
 router = APIRouter()
 
@@ -16,18 +15,17 @@ router = APIRouter()
     '/{course_id}/modules',
     response_model=List[ModuleRead],
 )
-async def get_module_info(
+async def list_modules(
     course: Course = Depends(course_exists),
 ) -> List[Module]:
 
     return course.modules
-        
 
 
 @router.post(
     '/{course_id}/modules',
     response_model=ModuleInfo,
-    status_code=status.HTTP_201_CREATED
+    status_code=status.HTTP_201_CREATED,
 )
 async def create_module(
     course: Course = Depends(course_exists),
@@ -40,7 +38,9 @@ async def create_module(
         raise HTTPException(status.HTTP_403_FORBIDDEN)
 
     next_number = len(course.modules) + 1
-    module = await crud_module.create(module_create, course_id=course.id, number=next_number)
+    module = await crud_module.create(
+        module_create, course_id=course.id, number=next_number
+    )
 
     return module
 
@@ -56,14 +56,14 @@ async def get_module_info(
 ) -> ModuleInfo:
 
     user = await auth.check_roles(['student', 'teacher'])
-    
+
     if len(course.modules) < module_number:
         raise HTTPException(status.HTTP_404_NOT_FOUND)
 
-    # 'course.modules' are ordered by number
+    # 'course.modules' is ordered by number
     module = course.modules[module_number - 1]
     module_info = ModuleInfo.from_orm(module)
-    
+
     if user.role == 'student':
         if course.id not in [owned_course.id for owned_course in user.students_courses]:
             raise HTTPException(status.HTTP_403_FORBIDDEN)

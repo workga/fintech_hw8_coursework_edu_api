@@ -1,12 +1,9 @@
-from http.client import HTTPException
-from fastapi import APIRouter, status, Body, Depends, HTTPException
+from fastapi import APIRouter, Body, Depends, HTTPException, status
 
-from app.models.user import User
-from app.schemas.user import UserInfo, UserCreate
 from app.api.deps import Auth
-
 from app.crud.crud_user import crud_user
-
+from app.models.user import User
+from app.schemas.user import UserCreate, UserInfo
 
 router = APIRouter()
 
@@ -29,5 +26,5 @@ async def create_user(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail='Email already registered',
         )
-    
+
     return user

@@ -1,10 +1,9 @@
-from typing import Any, Dict, Optional, Union
+from typing import Optional
 
 from sqlalchemy import select
 
-from app.database.db import create_session
-
 from app.crud.crud_base import CRUDBase
+from app.database.db import create_session
 from app.models.module import Module
 
 
@@ -12,10 +11,7 @@ class CRUDModule(CRUDBase[Module]):
     async def set_status(self, module_id: int, status: str) -> Optional[Module]:
         async with create_session() as session:
             row = (
-                await session.execute(
-                    select(Module)
-                    .where(Module.id == module_id)
-                )
+                await session.execute(select(Module).where(Module.id == module_id))
             ).one_or_none()
 
             db_module = self.row_to_model(row)
@@ -28,8 +24,9 @@ class CRUDModule(CRUDBase[Module]):
 
         return db_module
 
-
-    async def get_by_number_in_course(self, course_id: int, number: int) -> Optional[Module]:
+    async def get_by_number_in_course(
+        self, course_id: int, number: int
+    ) -> Optional[Module]:
         async with create_session() as session:
             row = (
                 await session.execute(

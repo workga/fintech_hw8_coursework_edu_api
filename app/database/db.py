@@ -3,15 +3,17 @@ from contextlib import asynccontextmanager
 from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession, create_async_engine
 from sqlalchemy.orm import sessionmaker
 
+# Need import models to create tables correctly
 from app.core.settings import app_settings
-
-# Need this imports to be able to use tables
-from app.models.course import Course  # noqa
-from app.models.course_user import CourseStudent, CourseTeacher  # noqa
-from app.models.user import User  # noqa
-from app.models.module import Module  # noqa
-from app.models.solution import Solution  # noqa
-from app.models.message import Message  # noqa
+from app.models.course import Course  # noqa  # pylint: disable=unused-import
+from app.models.course_user import (  # noqa  # pylint: disable=unused-import
+    CourseStudent,
+    CourseTeacher,
+)
+from app.models.message import Message  # noqa  # pylint: disable=unused-import
+from app.models.module import Module  # noqa  # pylint: disable=unused-import
+from app.models.solution import Solution  # noqa  # pylint: disable=unused-import
+from app.models.user import User  # noqa  # pylint: disable=unused-import
 
 SessionLocal = sessionmaker(expire_on_commit=False, class_=AsyncSession)
 
@@ -26,7 +28,6 @@ def init_db(testing: bool = False) -> AsyncEngine:
 
 @asynccontextmanager
 async def create_session() -> AsyncSession:
-    async with SessionLocal.begin() as session:
+    # Because pylint doesn't know about begin() method
+    async with SessionLocal.begin() as session:  # pylint: disable=no-member
         yield session
-
-

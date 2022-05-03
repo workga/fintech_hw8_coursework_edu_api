@@ -1,11 +1,11 @@
 from sqlalchemy import (
-    UniqueConstraint,
     CheckConstraint,
     Column,
     ForeignKey,
     Integer,
     String,
     Text,
+    UniqueConstraint,
 )
 from sqlalchemy.orm import relationship
 
@@ -22,16 +22,12 @@ class Module(Base):
     theory = Column(Text, nullable=False)
     task = Column(Text, nullable=False)
     duration = Column(Integer, nullable=False)
-    status = Column(String(20), nullable=False, default="waiting")
-
-    __table_args__ = (
-        CheckConstraint('status in ("waiting", "started", "finished")'),
-    )
+    status = Column(String(20), nullable=False, default='waiting')
 
     __table_args__ = (
         CheckConstraint('number > 0'),
         UniqueConstraint('course_id', 'number'),
+        CheckConstraint('status in ("waiting", "started", "finished")'),
     )
 
     course = relationship('Course', back_populates='modules')
-

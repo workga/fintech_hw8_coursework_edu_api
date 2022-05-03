@@ -1,8 +1,6 @@
-from datetime import timedelta
 from typing import Any, Optional
-from datetime import timedelta
 
-from pydantic import BaseModel, ValidationError, constr, validator
+from pydantic import BaseModel, constr, validator
 
 
 class ModuleBase(BaseModel):
@@ -10,7 +8,7 @@ class ModuleBase(BaseModel):
     duration: int
 
     @validator('duration')
-    def check_duration(cls: Any, duration: int):
+    def check_duration(cls: Any, duration: int) -> int:
         if duration <= 0:
             raise ValueError('Duration is incorrect')
         return duration
@@ -21,7 +19,7 @@ class ModuleBase(BaseModel):
 
 class ModuleCreate(ModuleBase):
     theory: constr(min_length=1)  # type: ignore
-    task: constr(min_length=1)  # type: ignores
+    task: constr(min_length=1)  # type: ignore
 
 
 class ModuleRead(ModuleBase):
@@ -31,5 +29,5 @@ class ModuleRead(ModuleBase):
 
 class ModuleInfo(ModuleRead):
     theory: Optional[constr(min_length=1)]  # type: ignore
-    task: Optional[constr(min_length=1)]
+    task: Optional[constr(min_length=1)]  # type: ignore
     status: str
