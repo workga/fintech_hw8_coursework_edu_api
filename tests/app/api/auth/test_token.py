@@ -47,9 +47,7 @@ async def test_access_wrong_role(client, student_token):
 async def test_access_invalid_token(client, student_token):
     _, token = student_token
 
-    invalid_token = (
-        token['access_token'][:-1]
-    )
+    invalid_token = token['access_token'][:-1]
     response = client.get(
         '/api/profile/courses', headers={'Authorization': f'Bearer {invalid_token}'}
     )
