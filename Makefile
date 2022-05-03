@@ -1,5 +1,4 @@
 TESTS = tests
-APP = app
 
 VENV ?= .venv
 CODE = tests app
