@@ -53,10 +53,10 @@ recreate: ## Recreate db and create admin
 	$(VENV)/bin/python -m app.cli create-admin admin@api.edu admin
 
 .PHONY: run
-run: ## Recreate db, create admin and run application
-	$(VENV)/bin/python -m app.cli recreate-db
-	$(VENV)/bin/python -m app.cli create-admin admin@api.edu admin
-	$(VENV)/bin/uvicorn --reload --factory app.app:create_app --host $(HOST) --port $(PORT)
+run: ## In docker container: Recreate db, create admin and run application
+	poetry run python -m app.cli recreate-db
+	poetry run python -m app.cli create-admin admin@api.edu admin
+	poetry run uvicorn --reload --factory app.app:create_app --host $(HOST) --port $(PORT)
 
 .PHONY: docker-build
 docker-build: ## Build docker image

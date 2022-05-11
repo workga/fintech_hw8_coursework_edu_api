@@ -17,23 +17,21 @@ ENV POETRY_VERSION="1.1.13"
 
 ENV VENV=.venv
 
-
 ARG ENVIRONMENT=production
+
+WORKDIR /opt/app
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && apt-get autoclean && apt-get autoremove \
     && rm -rf /var/lib/apt/lists/* \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+    && python -m pip install --upgrade pip \
+	&& python -m pip install "poetry==$POETRY_VERSION"
 
-WORKDIR /opt/app
-
-RUN python -m venv $VENV \
-	&& $VENV/bin/python -m pip install --upgrade pip \
-	&& $VENV/bin/python -m pip install "poetry==$POETRY_VERSION"
 
 COPY pyproject.toml ./
-RUN .venv/bin/poetry install $(if test "$ENVIRONMENT" = production; then echo "--no-dev"; fi)
+RUN poetry install $(if test "$ENVIRONMENT" = production; then echo "--no-dev"; fi)
 
 # Copy separately, because we don't want to merge content in one directory
 COPY app app
